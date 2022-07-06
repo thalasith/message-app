@@ -1,38 +1,30 @@
 use near_sdk::borsh::{self, BorshDeserialize, BorshSerialize};
-use near_sdk::near_bindgen;
+use near_sdk::collections::LookupMap;
+use near_sdk::{env, near_bindgen, AccountId};
 
 #[near_bindgen]
-#[derive(Default, BorshDeserialize, BorshSerialize)]
-pub struct Contract {
+#[derive(BorshDeserialize, BorshSerialize)]
+pub struct StatusMessage {
     // SETUP CONTRACT STATE
+    records: LookupMap<AccountId, String>,
+}
+
+impl Default for StatusMessage {
+    fn default() -> Self {
+        Self {
+            records: LookupMap::new(b"r".to_vec()),
+        }
+    }
 }
 
 #[near_bindgen]
-impl Contract {
-    // ADD CONTRACT METHODS HERE
-}
-
-/*
- * the rest of this file sets up unit tests
- * to run these, the command will be:
- * cargo test --package rust-template -- --nocapture
- * Note: 'rust-template' comes from Cargo.toml's 'name' key
- */
-
-// use the attribute below for unit tests
-#[cfg(test)]
-mod tests {
-    use super::*;
-    use near_sdk::test_utils::{get_logs, VMContextBuilder};
-    use near_sdk::{testing_env, AccountId};
-
-    // part of writing unit tests is setting up a mock context
-    // provide a `predecessor` here, it'll modify the default context
-    fn get_context(predecessor: AccountId) -> VMContextBuilder {
-        let mut builder = VMContextBuilder::new();
-        builder.predecessor_account_id(predecessor);
-        builder
+impl StatusMessage {
+    pub fn set_status(&mut self, message: String) {
+        let account_id = env::signer_account_id();
+        self.records.insert(&account_id, &message);
     }
 
-    // TESTS HERE
+    pub fn get_status(&self, account_id: AccountId) -> Option<String> {
+        return self.records.get(&account_id);
+    }
 }

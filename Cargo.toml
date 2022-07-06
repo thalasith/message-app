@@ -1,7 +1,7 @@
 [package]
-name = "rust-template"
+name = "status-message"
 version = "0.1.0"
-authors = ["Near Inc <hello@near.org>"]
+authors = ["message.thalassiel.testnet"]
 edition = "2018"
 
 [lib]
