@@ -10,7 +10,8 @@ global.Buffer = Buffer;
 
 // Initialize contract
 async function initContract() {
-  const nearConfig = getConfig(process.env.NODE_ENV || "testnet");
+  //process.env.NODE_ENV ||
+  const nearConfig = getConfig("testnet");
 
   const near = await nearAPI.connect({
     keyStore: new nearAPI.keyStores.BrowserLocalStorageKeyStore(),
